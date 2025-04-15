@@ -45,6 +45,6 @@ export async function GET() {
     return NextResponse.json({ rate: averageAnnualReturn });
   } catch (error) {
     console.error('Error fetching or calculating SP500 average annual return:', error);
-    return NextResponse.json({ rate: -1000.0 }, { status: 500 });
+    return NextResponse.json({ rate: -2.0 }, { status: 500 });
   }
 }
