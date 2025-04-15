@@ -54,7 +54,7 @@ export async function getMarketReturn(): Promise<MarketReturn> {
       } else {
         console.error('Error fetching market return:', error);
       }
-      return { rate: -1000.0 };
+      return { rate: -1.0 };
   }
 }
 
