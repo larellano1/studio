@@ -45,8 +45,12 @@ export async function getMarketReturn(): Promise<MarketReturn> {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error fetching market return:', error);
-        return { rate: -1000.0 };
+      if (error.message) {
+        console.error('Error fetching risk-free rate:', error.message, error);
+      } else {
+        console.error('Error fetching risk-free rate:', error);
+      }
+      return { rate: -1000.0 };
   }
 }
 
