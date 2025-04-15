@@ -19,8 +19,12 @@ export async function getRiskFreeRate(): Promise<RiskFreeRate> {
         const data = await response.json();
         return data;
     } catch (error) {
+      if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as any).message === 'string') {
+        console.error('Error fetching risk-free rate:', (error as any).message, error);
+      } else {
         console.error('Error fetching risk-free rate:', error);
-        return { rate: -1000.0 };
+      }
+      return { rate: -1000.0 };
   }
 }
 
@@ -45,10 +49,10 @@ export async function getMarketReturn(): Promise<MarketReturn> {
         const data = await response.json();
         return data;
     } catch (error) {
-      if (error.message) {
-        console.error('Error fetching risk-free rate:', error.message, error);
+      if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as any).message === 'string') {
+        console.error('Error fetching market return:', (error as any).message, error);
       } else {
-        console.error('Error fetching risk-free rate:', error);
+        console.error('Error fetching market return:', error);
       }
       return { rate: -1000.0 };
   }
