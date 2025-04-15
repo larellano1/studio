@@ -26,7 +26,7 @@ export async function getRiskFreeRate(): Promise<RiskFreeRate> {
   } catch (error) {
     console.error("Error fetching risk-free rate:", error);
     // Return a default value or throw an error depending on your error handling strategy
-    return { rate: 0.0384 }; // Returning a default value for now
+    return { rate: -1000.0 }; // Returning a default value for now
   }
 }
 
