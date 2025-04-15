@@ -12,16 +12,8 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastTitle,
-} from "@/components/ui/toast";
-import {
-  ToastProvider,
-  useToast,
-} from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function Home() {
   const [companySector, setCompanySector] = useState("");
@@ -71,11 +63,46 @@ export default function Home() {
     }
   };
 
-  const sectors = ["Technology", "Healthcare", "Finance", "Energy", "Consumer Discretionary"];
-  const countries = ["USA", "Canada", "UK", "Germany", "France", "Japan", "China", "India"];
+  const sectors = [
+    "Technology",
+    "Healthcare",
+    "Finance",
+    "Energy",
+    "Consumer Discretionary",
+    "Consumer Staples",
+    "Industrials",
+    "Materials",
+    "Real Estate",
+    "Utilities",
+    "Telecommunication Services",
+    "Information Technology",
+    "Aerospace & Defense",
+    "Banks",
+    "Capital Goods",
+    "Chemicals",
+    "Construction & Engineering",
+    "Insurance",
+    "Media & Entertainment",
+    "Pharmaceuticals",
+  ];
+  const countries = [
+    "USA",
+    "Canada",
+    "UK",
+    "Germany",
+    "France",
+    "Japan",
+    "China",
+    "India",
+    "Brazil",
+    "Australia",
+    "South Korea",
+    "Mexico",
+  ];
 
   return (
-    
+    <>
+      <Toaster />
       <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-background">
         <Card className="w-full max-w-md space-y-4 bg-card shadow-md rounded-lg">
           <CardHeader>
@@ -159,6 +186,6 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-    
+    </>
   );
 }
