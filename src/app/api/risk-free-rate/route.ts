@@ -4,7 +4,7 @@ import { parse } from 'csv-parse';
 export async function GET(request: NextRequest) {
   try {
     const url =
-      'https://query1.finance.yahoo.com/v7/finance/download/%5ETNX?period1=1672531200&period2=1704067200&interval=1d&events=history&includeAdjustedClose=true';
+      'https://query1.finance.yahoo.com/v7/finance/download/%5ETNX?range=1d&interval=1d&events=history&includeAdjustedClose=true';
     const response = await fetch(url);
 
     if (!response.ok) {

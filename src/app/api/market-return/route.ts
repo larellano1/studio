@@ -3,7 +3,7 @@ import { parse } from 'csv-parse';
 
 export async function GET() {
   try {
-    const csvUrl = 'https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=1388534400&period2=1704067200&interval=1mo&events=history&includeAdjustedClose=true';
+    const csvUrl = 'https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?range=10y&interval=1mo&events=history&includeAdjustedClose=true';
     const response = await fetch(csvUrl);
     const csvData = await response.text();
 
