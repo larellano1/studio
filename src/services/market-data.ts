@@ -39,12 +39,15 @@ export interface MarketReturn {
  *
  * @returns A promise that resolves to a MarketReturn object containing the rate.
  */
-export async function getMarketReturn(): Promise<MarketReturn> {
-  // TODO: Implement this by calling an API.
-
-  return {
-    rate: 0.10,
-  };
+export async function getMarketReturn(): Promise<MarketReturn> {  
+    try {
+        const response = await fetch('/api/market-return');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching market return:', error);
+        return { rate: -1000.0 };
+  }
 }
 
 /**
