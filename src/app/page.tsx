@@ -16,6 +16,9 @@ export default function Home() {
   const [companySector, setCompanySector] = useState("");
   const [country, setCountry] = useState("");
   const [expectedReturn, setExpectedReturn] = useState<number | null>(null);
+  const [riskFreeRate, setRiskFreeRate] = useState<number | null>(null);
+  const [marketReturn, setMarketReturn] = useState<number | null>(null);
+  const [beta, setBeta] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const calculateCAPM = async () => {
@@ -25,11 +28,15 @@ export default function Home() {
       const marketReturnData = await getMarketReturn();
       const unleveredBetaData = await getUnleveredBeta(companySector, country);
 
-      const riskFreeRate = riskFreeRateData.rate;
-      const marketReturn = marketReturnData.rate;
-      const beta = unleveredBetaData.beta;
+      const riskFreeRateValue = riskFreeRateData.rate;
+      const marketReturnValue = marketReturnData.rate;
+      const betaValue = unleveredBetaData.beta;
 
-      const capm = riskFreeRate + beta * (marketReturn - riskFreeRate);
+      setRiskFreeRate(riskFreeRateValue);
+      setMarketReturn(marketReturnValue);
+      setBeta(betaValue);
+
+      const capm = riskFreeRateValue + betaValue * (marketReturnValue - riskFreeRateValue);
       setExpectedReturn(capm);
     } catch (error) {
       console.error("Failed to calculate CAPM:", error);
@@ -73,6 +80,24 @@ export default function Home() {
                 Expected Return:{" "}
                 <span className="font-normal">
                   { (expectedReturn * 100).toFixed(2) }%
+                </span>
+              </p>
+              <p>
+                Risk-Free Rate:{" "}
+                <span className="font-normal">
+                  {riskFreeRate !== null ? (riskFreeRate * 100).toFixed(2) + "%" : "N/A"}
+                </span>
+              </p>
+              <p>
+                Market Return:{" "}
+                <span className="font-normal">
+                  {marketReturn !== null ? (marketReturn * 100).toFixed(2) + "%" : "N/A"}
+                </span>
+              </p>
+              <p>
+                Beta:{" "}
+                <span className="font-normal">
+                  {beta !== null ? beta.toFixed(2) : "N/A"}
                 </span>
               </p>
             </div>
