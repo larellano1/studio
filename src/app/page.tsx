@@ -16,10 +16,12 @@ import {
   Toast,
   ToastClose,
   ToastDescription,
-  ToastProvider,
   ToastTitle,
 } from "@/components/ui/toast";
-import { useToast } from "@/hooks/use-toast";
+import {
+  ToastProvider,
+  useToast,
+} from "@/hooks/use-toast";
 
 export default function Home() {
   const [companySector, setCompanySector] = useState("");
@@ -73,7 +75,7 @@ export default function Home() {
   const countries = ["USA", "Canada", "UK", "Germany", "France", "Japan", "China", "India"];
 
   return (
-    <ToastProvider>
+    
       <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-background">
         <Card className="w-full max-w-md space-y-4 bg-card shadow-md rounded-lg">
           <CardHeader>
@@ -117,11 +119,32 @@ export default function Home() {
               <div className={cn("mt-4 p-4 rounded-md", expectedReturn > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700")}>
                 <Accordion type="single" collapsible>
                   <AccordionItem value="formula">
-                    <AccordionTrigger>CAPM Formula: Expected Return = Risk-Free Rate + Beta * (Market Return - Risk-Free Rate)</AccordionTrigger>
+                    <AccordionTrigger>CAPM Formula</AccordionTrigger>
                     <AccordionContent>
-                      <p>Risk-Free Rate: {(riskFreeRate * 100).toFixed(2)}% (Value: {riskFreeRate.toFixed(4)})</p>
-                      <p>Beta: {beta.toFixed(2)} (Value: {beta.toFixed(4)})</p>
-                      <p>Market Return: {(marketReturn * 100).toFixed(2)}% (Value: {marketReturn.toFixed(4)})</p>
+                      <p>Expected Return = Risk-Free Rate + Beta * (Market Return - Risk-Free Rate)</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="factors">
+                    <AccordionTrigger>Factors</AccordionTrigger>
+                    <AccordionContent>
+                      <p className="font-bold">
+                        Risk-Free Rate:{" "}
+                        <span className="font-normal">
+                          {(riskFreeRate * 100).toFixed(2)}% (Value: {riskFreeRate?.toFixed(4)})
+                        </span>
+                      </p>
+                      <p className="font-bold">
+                        Beta:{" "}
+                        <span className="font-normal">
+                          {beta?.toFixed(2)} (Value: {beta?.toFixed(4)})
+                        </span>
+                      </p>
+                      <p className="font-bold">
+                        Market Return:{" "}
+                        <span className="font-normal">
+                          {(marketReturn * 100).toFixed(2)}% (Value: {marketReturn?.toFixed(4)})
+                        </span>
+                      </p>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
@@ -136,6 +159,6 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
-    </ToastProvider>
+    
   );
 }
