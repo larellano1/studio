@@ -79,7 +79,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-background">
         <Card className="w-full max-w-md space-y-4 bg-card shadow-md rounded-lg">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-foreground">ValuMaster: CAPM Calculator</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-foreground">ValueMaster: CAPM Calculator</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
 
