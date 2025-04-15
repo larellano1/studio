@@ -1,5 +1,3 @@
-import yf from "yfinance";
-
 /**
  * Represents a 10 year average risk free rate.
  */
@@ -16,17 +14,13 @@ export interface RiskFreeRate {
  * @returns A promise that resolves to a RiskFreeRate object containing the rate.
  */
 export async function getRiskFreeRate(): Promise<RiskFreeRate> {  
-  try {
-    const ticker = yf.getTicker("^TNX"); // ^TNX is the ticker symbol for the 10-year Treasury yield
-    const history = await ticker.history({ period: "1d" });
-    const latestValue = history.values().next().value;
-    const rate = latestValue.close / 100;
-
-    return { rate };
-  } catch (error) {
-    console.error("Error fetching risk-free rate:", error);
-    // Return a default value or throw an error depending on your error handling strategy
-    return { rate: -1000.0 }; // Returning a default value for now
+    try {
+        const response = await fetch('/api/risk-free-rate');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching risk-free rate:', error);
+        return { rate: -1000.0 };
   }
 }
 
