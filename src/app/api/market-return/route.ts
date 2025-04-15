@@ -3,9 +3,11 @@ import { parse } from 'csv-parse';
 
 export async function GET() {
   try {
-    const csvUrl = 'https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?range=10y&interval=1mo&events=history&includeAdjustedClose=true';
+    const csvUrl = 'https://finance.yahoo.com/quote/%5EGSPC/history/?frequency=1mo&period1=1429056000&period2=1744737882';
     const response = await fetch(csvUrl);
     const csvData = await response.text();
+
+    console.log(csvData);
 
     const records: { Close: string }[] = [];
     const parser = parse({ columns: true, skip_empty_lines: true });
