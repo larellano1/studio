@@ -1,41 +1,35 @@
-import { NextResponse } from 'next/server';
-import { parse } from 'csv-parse';
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const csvUrl = 'https://finance.yahoo.com/quote/%5EGSPC/history/?frequency=1mo&period1=1429056000&period2=1744737882';
-    const response = await fetch(csvUrl);
-    const csvData = await response.text();
+    const apiKey = process.env.FRED_API_KEY;
+    if (!apiKey) {
+      throw new Error("FRED_API_KEY environment variable not set.");
+    }
 
-    console.log(csvData);
+    const url = `https://api.stlouisfed.org/fred/series/observations?series_id=SP500&api_key=${apiKey}&file_type=json`;
+    const response = await fetch(url);
 
-    const records: { Close: string }[] = [];
-    const parser = parse({ columns: true, skip_empty_lines: true });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data from FRED: ${response.statusText}`);
+    }
 
-    parser.on('readable', () => {
-      let record;
-      while ((record = parser.read()) !== null) {
-        if (record.Close) {
-          records.push(parseFloat(record.Close));
-        }
-      }
-    });
+    const data = await response.json();
+    const observations = data.observations;
 
-    await new Promise((resolve, reject) => {
-      parser.on('error', (err) => reject(err));
-      parser.on('end', resolve);
-      parser.write(csvData);
-      parser.end();
-    });
+    if (!observations || observations.length < 2520) {
+      throw new Error("Not enough data points to calculate 10-year return.");
+    }
 
-    const closePrices = records
-      .slice(-120)
-      .map(record => parseFloat(record.Close))
-      .filter(price => !isNaN(price));
+    const closePrices = observations
+      .slice(-2520)
+      .map((obs: any) => parseFloat(obs.value))
+      .filter((value: number) => !isNaN(value) && value !== 0);
 
-
-    if (closePrices.length < 120) {
-      throw new Error('Not enough data points to calculate 10-year return.');
+    if (closePrices.length < 2520) {
+      throw new Error(
+        "Not enough valid data points to calculate 10-year return."
+      );
     }
 
     const initialValue = closePrices[0];
@@ -44,9 +38,12 @@ export async function GET() {
     const numberOfYears = 10;
     const averageAnnualReturn = ((totalReturn + 1) ** (1 / numberOfYears)) - 1;
 
-    return NextResponse.json({ rate: averageAnnualReturn });
+    return NextResponse.json({ rate: averageAnnualReturn }, { status: 200 });
   } catch (error) {
-    console.error('Error fetching or calculating SP500 average annual return:', error);
-    return NextResponse.json({ rate: -2.0 }, { status: 500 });
+    console.error(
+      "Error fetching or calculating SP500 average annual return:",
+      error
+    );
+    return NextResponse.json({ rate: -3.0, error: (error as Error).message }, { status: 500 });
   }
 }
