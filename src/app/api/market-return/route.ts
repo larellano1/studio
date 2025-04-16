@@ -7,13 +7,13 @@ export async function GET() {
       throw new Error("FRED_API_KEY environment variable not set.");
     }
 
+    console.log("API Key:", apiKey);
     const url = `https://api.stlouisfed.org/fred/series/observations?series_id=SP500&api_key=${apiKey}&file_type=json`;
     const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch data from FRED: ${response.statusText}`);
     }
-
     const data = await response.json();
     const observations = data.observations;
 
@@ -21,6 +21,9 @@ export async function GET() {
       throw new Error("Not enough data points to calculate 10-year return.");
     }
 
+    console.log("URL:", url);
+    console.log("Data:", data);
+    console.log("Observations:", observations);
     const closePrices = observations
       .slice(-2520)
       .map((obs: any) => parseFloat(obs.value))
