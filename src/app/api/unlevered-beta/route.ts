@@ -53,6 +53,7 @@ async function getUnleveredBeta(sector: string): Promise<number | null> {
                     logToFile(`Industry Name: ${rowData[industryNameIndex]}, Unlevered Beta: ${rowData[unleveredBetaIndex]}`);
                     if (rowData[industryNameIndex] === mappedSector) {
                         beta = parseFloat(rowData[unleveredBetaIndex]);
+                        logToFile(`Industry Name: ${rowData[industryNameIndex]}`+`Beta: ${beta}`);
                         return false; 
                     }
                 });

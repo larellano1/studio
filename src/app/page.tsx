@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { logToFile } from "@/utils/logger";
 
 export default function Home() {
   const [companySector, setCompanySector] = useState("");
@@ -22,6 +23,7 @@ export default function Home() {
   const [riskFreeRate, setRiskFreeRate] = useState<number | null>(null);
   const [marketReturn, setMarketReturn] = useState<number | null>(null);
   const [beta, setBeta] = useState<number | null>(null);
+  const [countryRiskPremium, setCountryRiskPremium] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -39,8 +41,8 @@ export default function Home() {
 
       const riskFreeRateData = await getRiskFreeRate();
       const marketReturnData = await getMarketReturn();
-      const unleveredBetaData = await getUnleveredBeta(companySector, country);
-
+      const unleveredBetaData = await getUnleveredBeta(companySector);
+            
       const riskFreeRateValue = riskFreeRateData.rate;
       const marketReturnValue = marketReturnData.rate;
       const betaValue = unleveredBetaData.beta;
@@ -48,8 +50,14 @@ export default function Home() {
       setRiskFreeRate(riskFreeRateValue);
       setMarketReturn(marketReturnValue);
       setBeta(betaValue);
+      const countryRiskPremiumData = await fetch("/api/country-risk-premium", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ countries: [country] }),
+      }).then(res => res.json());
+      setCountryRiskPremium(countryRiskPremiumData);
 
-      const capm = riskFreeRateValue + betaValue * (marketReturnValue - riskFreeRateValue);
+      const capm = riskFreeRateValue + betaValue * (marketReturnValue - riskFreeRateValue) + countryRiskPremiumData;
       setExpectedReturn(capm);
     } catch (error) {
       console.error("Failed to calculate CAPM:", error);
@@ -64,110 +72,104 @@ export default function Home() {
   };
 
  const sectors = [
-    "Advertising",
-    "Aerospace/Defense",
-    "Air Transport",
-    "Auto & Truck",
-    "Bank (Money Center)",
-    "Bank (Regional)",
-    "Beverage (Alcoholic)",
-    "Beverage (Soft)",
-    "Broadcasting",
-    "Brokerage & Investment Banking",
-    "Building Materials",
-    "Business & Consumer Services",
-    "Cable TV",
-    "Chemical (Basic)",
-    "Chemical (Diversified)",
-    "Chemical (Specialty)",
-    "Coal & Related Energy",
-    "Computer Hardware",
-    "Computers/Peripherals",
-    "Construction Supplies",
-    "Diversified",
-    "Drugs (Biotechnology)",
-    "Drugs (Pharmaceutical)",
-    "Electrical Equipment",
-    "Electronics (Consumer & Office)",
-    "Electronics (Semiconductor)",
-    "Engineering/Construction",
-    "Entertainment",
-    "Environmental & Waste Services",
-    "Farming/Agriculture",
-    "Financial Svcs. (Non-bank & Insur)",
-    "Food Processing",
-    "Food Wholesalers",
-    "Green & Renewable Energy",
-    "Healthcare Products",
-    "Healthcare Support Services",
-    "Information and Technology",
-    "Homebuilding",
-    "Hospitals/Healthcare Facilities",
-    "Hotel/Gaming",
-    "Household Products",
-    "Information Services",
-    "Insurance (Brokerage)",
-    "Insurance (Life)",
-    "Insurance (Prop./Cas.)",
-    "Investments & Asset Management",
-    "Machinery",
-    "Metals & Mining",
-    "Management and Services",
-    "Oil/Gas (Integrated)",
-    "Oil/Gas (Production and Exploration)",
-    "Oil/Gas Distribution",
-    "Oilfield Svcs/Equip.",
-    "Packaging & Container",
-    "Paper & Forest Products",
-    "Power",
-    "Precious Metals",
-    "Publishing & Newspapers",
-    "Real Estate (Dev.)",
-    "Real Estate (Diversified)",
-    "Real Estate (Operations & Service)",
-    "Recreation",
-    "Reinsurance",
-    "Retail (Auto & Home)",
-    "Retail (Automotive)",
-    "Retail (Catalog/Mail Order)",
-    "Retail (Distributors)",
-    "Retail (General)",
-    "Retail (Grocery and Food)",
-    "Retail (Home Furnishing)",
-    "Retail (Special Lines)",
-    "Rubber",
-    "Semiconductor",
-    "Semiconductor Equip",
-    "Shipbuilding & Marine",
-    "Shoes",
-    "Software (Entertainment)",
-    "Software (Internet)",
-    "Software (Systems & Application)",
-    "Steel",
-    "Telecom (Wireless)",
-    "Telecom. Equipment",
-    "Textiles",
-    "Tobacco",
-    "Toys",
-    "Transportation",
-    "Transportation (Railroads)",
-    "Trucking",
-    "Utility (General)",
-    "Utility (Water)"
+  "Advertising",
+  "Aerospace/Defense",
+  "Air Transport",
+  "Apparel",
+  "Auto & Truck",
+  "Auto Parts",
+  "Bank (Money Center)",
+  "Banks (Regional)",
+  "Beverage (Alcoholic)",
+  "Beverage (Soft)",
+  "Broadcasting",
+  "Brokerage & Investment Banking",
+  "Building Materials",
+  "Business & Consumer Services",
+  "Cable TV",
+  "Chemical (Basic)",
+  "Chemical (Diversified)",
+  "Chemical (Specialty)",
+  "Coal & Related Energy",
+  "Computer Services",
+  "Computers/Peripherals",
+  "Construction Supplies",
+  "Diversified",
+  "Drugs (Biotechnology)",
+  "Drugs (Pharmaceutical)",
+  "Education",
+  "Electrical Equipment",
+  "Electronics (Consumer & Office)",
+  "Electronics (General)",
+  "Engineering/Construction",
+  "Entertainment",
+  "Environmental & Waste Services",
+  "Farming/Agriculture",
+  "Financial Svcs. (Non-bank & Insurance)",
+  "Food Processing",
+  "Food Wholesalers",
+  "Furn/Home Furnishings",
+  "Green & Renewable Energy",
+  "Healthcare Products",
+  "Healthcare Support Services",
+  "Heathcare Information and Technology",
+  "Homebuilding",
+  "Hospitals/Healthcare Facilities",
+  "Hotel/Gaming",
+  "Household Products",
+  "Information Services",
+  "Insurance (General)",
+  "Insurance (Life)",
+  "Insurance (Prop/Cas.)",
+  "Investments & Asset Management",
+  "Machinery",
+  "Metals & Mining",
+  "Office Equipment & Services",
+  "Oil/Gas (Integrated)",
+  "Oil/Gas (Production and Exploration)",
+  "Oil/Gas Distribution",
+  "Oilfield Svcs/Equip.",
+  "Packaging & Container",
+  "Paper/Forest Products",
+  "Power",
+  "Precious Metals",
+  "Publishing & Newspapers",
+  "R.E.I.T.",
+  "Real Estate (Development)",
+  "Real Estate (General/Diversified)",
+  "Real Estate (Operations & Services)",
+  "Recreation",
+  "Reinsurance",
+  "Restaurant/Dining",
+  "Retail (Automotive)",
+  "Retail (Building Supply)",
+  "Retail (Distributors)",
+  "Retail (General)",
+  "Retail (Grocery and Food)",
+  "Retail (REITs)",
+  "Retail (Special Lines)",
+  "Rubber& Tires",
+  "Semiconductor",
+  "Semiconductor Equip",
+  "Shipbuilding & Marine",
+  "Shoe",
+  "Software (Entertainment)",
+  "Software (Internet)",
+  "Software (System & Application)",
+  "Steel",
+  "Telecom (Wireless)",
+  "Telecom. Equipment",
+  "Telecom. Services",
+  "Tobacco",
+  "Transportation",
+  "Transportation (Railroads)",
+  "Trucking",
+  "Utility (General)",
+  "Utility (Water)"
 ];
   const countries = [
     "USA",
-    "Canada",
-    "UK",
-    "Germany",
-    "France",
-    "Japan",
-    "China",
-    "India",
     "Brazil",
-    "Australia",
-    "South Korea",
-    "Mexico",
   ];
 
   return (
@@ -218,7 +220,7 @@ export default function Home() {
                   <AccordionItem value="formula">
                     <AccordionTrigger>CAPM Formula</AccordionTrigger>
                     <AccordionContent>
-                      <p>Expected Return = Risk-Free Rate + Beta * (Market Return - Risk-Free Rate)</p>
+                      <p>Expected Return = Risk-Free Rate + Beta * (Market Return - Risk-Free Rate) + Country Risk-Premium</p>
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="factors">
@@ -240,6 +242,14 @@ export default function Home() {
                         Market Return:{" "}
                         <span className="font-normal">
                           {(marketReturn * 100).toFixed(2)}% (Value: {marketReturn?.toFixed(4)})
+                        </span>
+                      </p>
+                      <p className="font-bold">
+                        Country Risk Premium:{" "}
+                        <span className="font-normal">
+                          {
+                            ((countryRiskPremium !== null && countryRiskPremium !== undefined) ? (countryRiskPremium) : 'NA')
+                          }%
                         </span>
                       </p>
                     </AccordionContent>
@@ -275,6 +285,17 @@ export default function Home() {
                           <span className="font-bold">Unlevered Beta:</span> Damodaran Online -{" "}
                           <a
                             href="https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                          >
+                            pages.stern.nyu.edu
+                          </a>
+                        </li>
+                        <li>
+                          <span className="font-bold">Country Risk-Premium:</span> Damodaran Online -{" "}
+                          <a
+                            href="https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:underline"

@@ -1,3 +1,5 @@
+import { logToFile } from "@/utils/logger";
+
 /**
  * Represents a 10 year average risk free rate.
  */
@@ -91,3 +93,4 @@ export async function getUnleveredBeta(
     return { beta: -1.0 };
   }
 }
+
