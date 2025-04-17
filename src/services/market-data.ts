@@ -71,18 +71,23 @@ export interface UnleveredBeta {
 /**
  * Asynchronously retrieves the unlevered beta.
  *
- * @param companySector The company sector to filter on.
- * @param country The country to filter on.
+ * @param companySector The company sector.
  *
  * @returns A promise that resolves to a UnleveredBeta object containing the beta.
  */
 export async function getUnleveredBeta(
   companySector: string,
-  country: string
 ): Promise<UnleveredBeta> {
-  // TODO: Implement this by calling an API.
-
-  return {
-    beta: 1.1,
-  };
+  try {
+    const response = await fetch(`/api/unlevered-beta?sector=${companySector}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as any).message === 'string') {
+      console.error('Error fetching unlevered beta:', (error as any).message, error);
+    } else {
+      console.error('Error fetching unlevered beta:', error);
+    }
+    return { beta: -1.0 };
+  }
 }

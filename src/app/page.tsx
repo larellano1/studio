@@ -63,28 +63,98 @@ export default function Home() {
     }
   };
 
-  const sectors = [
-    "Technology",
-    "Healthcare",
-    "Finance",
-    "Energy",
-    "Consumer Discretionary",
-    "Consumer Staples",
-    "Industrials",
-    "Materials",
-    "Real Estate",
-    "Utilities",
-    "Telecommunication Services",
-    "Information Technology",
-    "Aerospace & Defense",
-    "Banks",
-    "Capital Goods",
-    "Chemicals",
-    "Construction & Engineering",
-    "Insurance",
-    "Media & Entertainment",
-    "Pharmaceuticals",
-  ];
+ const sectors = [
+    "Advertising",
+    "Aerospace/Defense",
+    "Air Transport",
+    "Auto & Truck",
+    "Bank (Money Center)",
+    "Bank (Regional)",
+    "Beverage (Alcoholic)",
+    "Beverage (Soft)",
+    "Broadcasting",
+    "Brokerage & Investment Banking",
+    "Building Materials",
+    "Business & Consumer Services",
+    "Cable TV",
+    "Chemical (Basic)",
+    "Chemical (Diversified)",
+    "Chemical (Specialty)",
+    "Coal & Related Energy",
+    "Computer Hardware",
+    "Computers/Peripherals",
+    "Construction Supplies",
+    "Diversified",
+    "Drugs (Biotechnology)",
+    "Drugs (Pharmaceutical)",
+    "Electrical Equipment",
+    "Electronics (Consumer & Office)",
+    "Electronics (Semiconductor)",
+    "Engineering/Construction",
+    "Entertainment",
+    "Environmental & Waste Services",
+    "Farming/Agriculture",
+    "Financial Svcs. (Non-bank & Insur)",
+    "Food Processing",
+    "Food Wholesalers",
+    "Green & Renewable Energy",
+    "Healthcare Products",
+    "Healthcare Support Services",
+    "Information and Technology",
+    "Homebuilding",
+    "Hospitals/Healthcare Facilities",
+    "Hotel/Gaming",
+    "Household Products",
+    "Information Services",
+    "Insurance (Brokerage)",
+    "Insurance (Life)",
+    "Insurance (Prop./Cas.)",
+    "Investments & Asset Management",
+    "Machinery",
+    "Metals & Mining",
+    "Management and Services",
+    "Oil/Gas (Integrated)",
+    "Oil/Gas (Production and Exploration)",
+    "Oil/Gas Distribution",
+    "Oilfield Svcs/Equip.",
+    "Packaging & Container",
+    "Paper & Forest Products",
+    "Power",
+    "Precious Metals",
+    "Publishing & Newspapers",
+    "Real Estate (Dev.)",
+    "Real Estate (Diversified)",
+    "Real Estate (Operations & Service)",
+    "Recreation",
+    "Reinsurance",
+    "Retail (Auto & Home)",
+    "Retail (Automotive)",
+    "Retail (Catalog/Mail Order)",
+    "Retail (Distributors)",
+    "Retail (General)",
+    "Retail (Grocery and Food)",
+    "Retail (Home Furnishing)",
+    "Retail (Special Lines)",
+    "Rubber",
+    "Semiconductor",
+    "Semiconductor Equip",
+    "Shipbuilding & Marine",
+    "Shoes",
+    "Software (Entertainment)",
+    "Software (Internet)",
+    "Software (Systems & Application)",
+    "Steel",
+    "Telecom (Wireless)",
+    "Telecom. Equipment",
+    "Textiles",
+    "Tobacco",
+    "Toys",
+    "Transportation",
+    "Transportation (Railroads)",
+    "Trucking",
+    "Utility (General)",
+    "Utility (Water)"
+];
   const countries = [
     "USA",
     "Canada",
@@ -172,6 +242,47 @@ export default function Home() {
                           {(marketReturn * 100).toFixed(2)}% (Value: {marketReturn?.toFixed(4)})
                         </span>
                       </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="sources">
+                    <AccordionTrigger>Sources</AccordionTrigger>
+                    <AccordionContent>
+                      <p>The data shown is coming from:</p>
+                      <ul className="list-disc list-inside mt-2">
+                        <li>
+                          <span className="font-bold">Risk-Free Rate:</span> 10 Years US Treasury Bonds - FRED - Series: DGS10{" "}
+                          <a
+                            href="https://fred.stlouisfed.org/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                          >
+                            fred.stlouisfed.org
+                          </a>
+                        </li>
+                        <li>
+                          <span className="font-bold">Market Return:</span> S&P 500 historical data (10 years) - FRED - Series: SP500{" "}
+                          <a
+                            href="https://fred.stlouisfed.org/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                          >
+                            fred.stlouisfed.org
+                          </a>
+                        </li>
+                        <li>
+                          <span className="font-bold">Unlevered Beta:</span> Damodaran Online -{" "}
+                          <a
+                            href="https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                          >
+                            pages.stern.nyu.edu
+                          </a>
+                        </li>
+                      </ul>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
