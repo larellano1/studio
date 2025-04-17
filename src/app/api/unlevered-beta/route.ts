@@ -50,10 +50,10 @@ async function getUnleveredBeta(sector: string): Promise<number | null> {
                     const rowData = $(row).find('td').map((_, el) => $(el).text().trim()).get();
                     const industryNameIndex = headers.indexOf('Industry Name');
                     const unleveredBetaIndex = headers.indexOf('Unlevered beta');
-                    logToFile(`Industry Name: ${rowData[industryNameIndex]}, Unlevered Beta: ${rowData[unleveredBetaIndex]}`);
+                    //logToFile(`Industry Name: ${rowData[industryNameIndex]}, Unlevered Beta: ${rowData[unleveredBetaIndex]}`);
                     if (rowData[industryNameIndex] === mappedSector) {
                         beta = parseFloat(rowData[unleveredBetaIndex]);
-                        logToFile(`Industry Name: ${rowData[industryNameIndex]}`+`Beta: ${beta}`);
+                        //logToFile(`Industry Name: ${rowData[industryNameIndex]}`+`Beta: ${beta}`);
                         return false; 
                     }
                 });

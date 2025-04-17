@@ -94,3 +94,35 @@ export async function getUnleveredBeta(
   }
 }
 
+
+export interface CountryRiskPremium {
+  /**
+   * The CPR.
+   */
+  risk: number;
+}
+
+/**
+ * Asynchronously retrieves the unlevered beta.
+ *
+ * @param country The country.
+ *
+ * @returns A promise that resolves to a CPR object containing the risk.
+ */
+export async function getCountryRiskPremium(
+  country: string,
+): Promise<CountryRiskPremium> {
+  try {
+    const response = await fetch(`/api/country-risk-premium?country=${country}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'message' in error && typeof (error as any).message === 'string') {
+      console.error('Error fetching CPR', (error as any).message, error);
+    } else {
+      console.error('Error fetching CPR', error);
+    }
+    return { risk: -1.0 };
+  }
+}
+

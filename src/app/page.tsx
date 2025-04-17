@@ -5,6 +5,7 @@ import {
   getMarketReturn,
   getRiskFreeRate,
   getUnleveredBeta,
+  getCountryRiskPremium,
 } from "@/services/market-data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,22 +43,20 @@ export default function Home() {
       const riskFreeRateData = await getRiskFreeRate();
       const marketReturnData = await getMarketReturn();
       const unleveredBetaData = await getUnleveredBeta(companySector);
+      const countryRiskPremium = await getCountryRiskPremium(country);
             
       const riskFreeRateValue = riskFreeRateData.rate;
       const marketReturnValue = marketReturnData.rate;
       const betaValue = unleveredBetaData.beta;
+      const countryRiskPremiumValue = countryRiskPremium.risk;
 
       setRiskFreeRate(riskFreeRateValue);
       setMarketReturn(marketReturnValue);
       setBeta(betaValue);
-      const countryRiskPremiumData = await fetch("/api/country-risk-premium", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ countries: [country] }),
-      }).then(res => res.json());
-      setCountryRiskPremium(countryRiskPremiumData);
+      setCountryRiskPremium(countryRiskPremiumValue);
 
-      const capm = riskFreeRateValue + betaValue * (marketReturnValue - riskFreeRateValue) + countryRiskPremiumData;
+    
+      const capm = riskFreeRateValue + betaValue * (marketReturnValue - riskFreeRateValue) + countryRiskPremiumValue;
       setExpectedReturn(capm);
     } catch (error) {
       console.error("Failed to calculate CAPM:", error);
