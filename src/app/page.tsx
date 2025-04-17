@@ -167,7 +167,7 @@ export default function Home() {
   "Utility (Water)"
 ];
   const countries = [
-    "USA",
+    "United States",
     "Brazil",
   ];
 
@@ -247,8 +247,8 @@ export default function Home() {
                         Country Risk Premium:{" "}
                         <span className="font-normal">
                           {
-                            ((countryRiskPremium !== null && countryRiskPremium !== undefined) ? (countryRiskPremium) : 'NA')
-                          }%
+                            ((countryRiskPremium !== null && countryRiskPremium !== undefined) ? ((countryRiskPremium*100).toFixed(2)) + `% (Value: ${(countryRiskPremium).toFixed(4)})` : 'NA')
+                          }
                         </span>
                       </p>
                     </AccordionContent>

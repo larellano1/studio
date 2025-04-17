@@ -41,22 +41,23 @@ async function getCountryRiskPremium(country: string): Promise<number | null> {
         const $ = cheerio.load(html);
         
         let risk: number | null = null;
-        $('table').each((_, table) => {
-            
-                $(table).find('tbody tr').each((_, row) => {
-                    const rowData = $(row).find('td').map((_, el) => $(el).text().trim()).get();
-                    if(rowData.includes(country)){
-                      const countryNameIndex = rowData.indexOf(country);
-                      const countryPremiumRiskIndex = 3;
-                      logToFile(`Country: ${rowData[countryNameIndex]}, CPR: ${rowData[countryPremiumRiskIndex]}`);
-                      if (rowData[countryNameIndex] === country) {
-                          risk = parseFloat(rowData[countryPremiumRiskIndex]);
-                          return false; 
-                      }
-                    }
-                });
-                return false; 
-            });
+
+        const tables = $('table');
+
+        const table = $('table').eq(1);  
+        table.find('tbody tr').each((_, row) => {
+          const rowData = $(row).find('td').map((_, el) => $(el).text().trim()).get();
+          if(rowData.includes(country)){
+          const countryNameIndex = rowData.indexOf(country);
+          const countryPremiumRiskIndex = 3;
+          logToFile(`Country: ${rowData[countryNameIndex]}, CPR: ${rowData[countryPremiumRiskIndex]}`);
+          if (rowData[countryNameIndex] === country) {
+            risk = parseFloat(rowData[countryPremiumRiskIndex]);
+            return false; 
+            }
+          }
+          });
+          return risk/100; 
         return risk;
     } catch (error: any) {
         logToFile('Error parsing HTML:' + error);
